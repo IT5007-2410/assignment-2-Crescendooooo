@@ -2,11 +2,13 @@
 const initialTravellers = [
   {
     id: 1, name: 'Jack', phone: 88885555,
-    bookingTime: new Date(),
+    email: 'jack@example.com', nationality: 'Singaporean',
+    bookingTime: new Date(), seatNumber: 1
   },
   {
     id: 2, name: 'Rose', phone: 88884444,
-    bookingTime: new Date(),
+    email: 'rose@example.com', nationality: 'Australian',
+    bookingTime: new Date(), seatNumber: 2
   },
 ];
 
@@ -140,6 +142,7 @@ class TicketToRide extends React.Component {
 		
 		{/*Q4. Code to call the component that adds a traveller.*/}
 		{/*Q5. Code to call the component that deletes a traveller based on a given attribute.*/}
+    <Delete/>
 	</div>
       </div>
     );
