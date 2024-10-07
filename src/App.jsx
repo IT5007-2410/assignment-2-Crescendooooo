@@ -15,14 +15,22 @@ const initialTravellers = [
 
 function TravellerRow(props) {
   {/*Q3. Placeholder to initialize local variable based on traveller prop.*/}
+  const {traveller} = props;
   return (
     <tr>
 	  {/*Q3. Placeholder for rendering one row of a table with required traveller attribute values.*/}
+      <td>{traveller.id}</td>
+      <td>{traveller.name}</td>
+      <td>{traveller.phone}</td>
+      <td>{traveller.email}</td>
+      <td>{traveller.nationality}</td>
+      <td>{traveller.bookingTime.toString()}</td>
+      <td>{traveller.seatNumber}</td>
     </tr>
   );
 }
 
-function Display(props) {
+function Display({ travellers }) {
   
 	/*Q3. Write code to render rows of table, reach corresponding to one traveller. Make use of the TravellerRow function that draws one row.*/
 
@@ -34,11 +42,17 @@ function Display(props) {
           <th>ID</th>
           <th>Name</th>
           <th>Phone</th>
+          <th>Email</th>
+          <th>Nationality</th>
           <th>Booking Time</th>
+          <th>Seat Number</th>
         </tr>
       </thead>
       <tbody>
         {/*Q3. write code to call the JS variable defined at the top of this function to render table rows.*/}
+        {travellers.map(traveller => (
+          <TravellerRow key={traveller.id} traveller={traveller} />
+        ))}
       </tbody>
     </table>
   );
@@ -110,6 +124,8 @@ class TicketToRide extends React.Component {
   setSelector(value)
   {
   	/*Q2. Function to set the value of component selector variable based on user's button click.*/
+    console.log('Setting selector to:', value);  // 调试：输出设置的 selector 值
+    this.setState({ selector: value });
   }
   componentDidMount() {
     this.loadData();
@@ -117,8 +133,11 @@ class TicketToRide extends React.Component {
 
   loadData() {
     setTimeout(() => {
-      this.setState({ travellers: initialTravellers });
-    }, 500);
+      console.log('loading data...');
+      this.setState({ travellers: initialTravellers }, () => {
+        console.log('Travellers state updated:', this.state.travellers);
+      });
+      }, 500);
   }
 
   bookTraveller(passenger) {
@@ -134,12 +153,13 @@ class TicketToRide extends React.Component {
         <h1>Ticket To Ride</h1>
 	<div>
 	    {/*Q2. Code for Navigation bar. Use basic buttons to create a nav bar. Use states to manage selection.*/}
+      <button onClick={() => this.setSelector(2)}>Display Travellers</button>
 	</div>
 	<div>
 		{/*Only one of the below four divisions is rendered based on the button clicked by the user.*/}
 		{/*Q2 and Q6. Code to call Instance that draws Homepage. Homepage shows Visual Representation of free seats.*/}
 		{/*Q3. Code to call component that Displays Travellers.*/}
-		
+    {this.state.selector === 2 && <Display travellers={this.state.travellers} />}
 		{/*Q4. Code to call the component that adds a traveller.*/}
 		{/*Q5. Code to call the component that deletes a traveller based on a given attribute.*/}
     <Delete/>
