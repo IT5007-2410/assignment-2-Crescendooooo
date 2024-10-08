@@ -110,13 +110,14 @@ class Homepage extends React.Component {
 	return (
 	<div>
 		{/*Q2. Placeholder for Homepage code that shows free seats visually.*/}
+    <h3>Total Free Seats: {this.props.totalSeats - this.props.reservedSeats}</h3>
 	</div>);
 	}
 }
 class TicketToRide extends React.Component {
   constructor() {
     super();
-    this.state = { travellers: [], selector: 1};
+    this.state = { travellers: [], selector: 'home' };
     this.bookTraveller = this.bookTraveller.bind(this);
     this.deleteTraveller = this.deleteTraveller.bind(this);
   }
@@ -124,7 +125,7 @@ class TicketToRide extends React.Component {
   setSelector(value)
   {
   	/*Q2. Function to set the value of component selector variable based on user's button click.*/
-    console.log('Setting selector to:', value);  // 调试：输出设置的 selector 值
+    console.log('Setting selector to:', value);
     this.setState({ selector: value });
   }
   componentDidMount() {
@@ -148,19 +149,33 @@ class TicketToRide extends React.Component {
 	  /*Q5. Write code to delete a passenger from the traveller state variable.*/
   }
   render() {
+    const totalSeats = 10;
+    const reservedSeats = this.state.travellers.length;
+
     return (
       <div>
         <h1>Ticket To Ride</h1>
 	<div>
 	    {/*Q2. Code for Navigation bar. Use basic buttons to create a nav bar. Use states to manage selection.*/}
-      <button onClick={() => this.setSelector(2)}>Display Travellers</button>
-	</div>
+      {/* <button onClick={() => this.setSelector(2)}>Display Travellers</button> */}
+      <button onClick={() => this.setSelector('home')}>Home</button>
+      <button onClick={() => this.setSelector('displayTravellers')}>Display Travellers</button>
+      <button onClick={() => this.setSelector('addTraveller')}>Add Traveller</button>
+
+  </div>
+  
 	<div>
 		{/*Only one of the below four divisions is rendered based on the button clicked by the user.*/}
 		{/*Q2 and Q6. Code to call Instance that draws Homepage. Homepage shows Visual Representation of free seats.*/}
-		{/*Q3. Code to call component that Displays Travellers.*/}
-    {this.state.selector === 2 && <Display travellers={this.state.travellers} />}
-		{/*Q4. Code to call the component that adds a traveller.*/}
+		{this.state.selector === 'home' && (
+            <Homepage totalSeats={totalSeats} reservedSeats={reservedSeats} />
+          )}
+
+    {/*Q3. Code to call component that Displays Travellers.*/}
+    {this.state.selector === 'displayTravellers' && <Display travellers={this.state.travellers} />}
+		
+    {/*Q4. Code to call the component that adds a traveller.*/}
+    {this.state.selector === 'addTraveller' && <Add />}
 		{/*Q5. Code to call the component that deletes a traveller based on a given attribute.*/}
     <Delete/>
 	</div>
