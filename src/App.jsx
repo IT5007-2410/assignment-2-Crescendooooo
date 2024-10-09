@@ -164,10 +164,34 @@ class Homepage extends React.Component {
 	super();
 	}
 	render(){
-	return (
+    // const seats = [];
+    const totalSeats = this.props.totalSeats;
+    const reservedSeats = this.props.reservedSeats;
+    const seats = Array.from({ length: totalSeats }, (_, i) => i < reservedSeats);
+	
+  return (
 	<div>
 		{/*Q2. Placeholder for Homepage code that shows free seats visually.*/}
-    <h3>Total Free Seats: {this.props.totalSeats - this.props.reservedSeats}</h3>
+    {/* <h3>Total Free Seats: {this.props.totalSeats - this.props.reservedSeats}</h3> */}
+    <h3>Total Free Seats: {totalSeats - reservedSeats}</h3>
+    <div style={{ display: 'flex', flexWrap: 'wrap', maxWidth: '300px' }}>
+                    {seats.map((isReserved, index) => (
+                        <div
+                            key={index}
+                            style={{
+                                width: '50px',
+                                height: '50px',
+                                margin: '5px',
+                                backgroundColor: isReserved ? 'gray' : 'green',
+                                textAlign: 'center',
+                                lineHeight: '50px',
+                                color: 'white',
+                            }}
+                        >
+                            {isReserved ? 'Reserved' : 'Free'}
+                        </div>
+                    ))}
+                </div>
 	</div>);
 	}
 }
@@ -200,6 +224,10 @@ class TicketToRide extends React.Component {
   }
 
   bookTraveller(newTraveller) {
+    if (this.state.travellers.length >= 10) {
+      alert("No more seats available");
+      return; // stop adding new traveller if all seats are reserved
+    }
 	    /*Q4. Write code to add a passenger to the traveller state variable.*/
       this.setState(prevState => ({
         travellers: [...prevState.travellers, newTraveller], // add newTraveller to the end of the array
@@ -208,6 +236,17 @@ class TicketToRide extends React.Component {
   }
 
   deleteTraveller(id) {
+    if (this.state.travellers.length === 0) {
+      alert("No travellers to delete");
+      return;
+    }
+    
+    const travellerToDelete = this.state.travellers.find(traveller => traveller.id === id);
+    if (!travellerToDelete) {
+      alert("Traveller ID not found");
+      return;
+    }
+
 	  /*Q5. Write code to delete a passenger from the traveller state variable.*/
     console.log('Deleting traveller with id:', id);
     this.setState(prevState => ({
