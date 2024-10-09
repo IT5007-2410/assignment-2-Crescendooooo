@@ -51,7 +51,7 @@ function Display({ travellers }) {
       <tbody>
         {/*Q3. write code to call the JS variable defined at the top of this function to render table rows.*/}
         {travellers.map(traveller => (
-          <TravellerRow key={traveller.id} traveller={traveller} />
+          <TravellerRow key={traveller.id} traveller={traveller} deleteTraveller={deleteTraveller}/>
         ))}
       </tbody>
     </table>
@@ -132,19 +132,24 @@ class Add extends React.Component {
 class Delete extends React.Component {
   constructor() {
     super();
+    this.state = { id: '' };
     this.handleSubmit = this.handleSubmit.bind(this);
   }
+
   handleSubmit(e) {
     e.preventDefault();
     /*Q5. Fetch the passenger details from the deletion form and call deleteTraveller()*/
+    this.props.deleteTraveller(parseInt(this.state.id));
+    this.setState({ id: '' });
   }
 
   render() {
     return (
       <form name="deleteTraveller" onSubmit={this.handleSubmit}>
 	    {/*Q5. Placeholder form to enter information on which passenger's ticket needs to be deleted. Below code is just an example.*/}
-	<input type="text" name="travellername" placeholder="Name" />
-        <button>Delete</button>
+	    <input type="number" name="id" value={this.state.id}
+        onChange={(e) => this.setState({ id: e.target.value })} placeholder="Enter an ID to delete" />
+      <button>Delete</button>
       </form>
     );
   }
@@ -168,6 +173,7 @@ class TicketToRide extends React.Component {
     this.state = { travellers: [], selector: 'home', nextId: initialTravellers.length + 1};
     this.bookTraveller = this.bookTraveller.bind(this);
     this.deleteTraveller = this.deleteTraveller.bind(this);
+    this.setSelector = this.setSelector.bind(this);
 }
 
   setSelector(value)
@@ -197,9 +203,13 @@ class TicketToRide extends React.Component {
       }));
   }
 
-  deleteTraveller(passenger) {
+  deleteTraveller(id) {
 	  /*Q5. Write code to delete a passenger from the traveller state variable.*/
+    this.setState(prevState => ({
+      travellers: prevState.travellers.filter(traveller => traveller.id !== id)
+    }));
   }
+
   render() {
     const totalSeats = 10;
     const reservedSeats = this.state.travellers.length;
@@ -209,10 +219,10 @@ class TicketToRide extends React.Component {
         <h1>Ticket To Ride</h1>
 	<div>
 	    {/*Q2. Code for Navigation bar. Use basic buttons to create a nav bar. Use states to manage selection.*/}
-      {/* <button onClick={() => this.setSelector(2)}>Display Travellers</button> */}
       <button onClick={() => this.setSelector('home')}>Home</button>
       <button onClick={() => this.setSelector('displayTravellers')}>Display Travellers</button>
       <button onClick={() => this.setSelector('addTraveller')}>Add Traveller</button>
+      <button onClick={() => this.setSelector('deleteTraveller')}>Delete Traveller</button>
 
   </div>
 
@@ -224,14 +234,17 @@ class TicketToRide extends React.Component {
           )}
 
     {/*Q3. Code to call component that Displays Travellers.*/}
-    {this.state.selector === 'displayTravellers' && <Display travellers={this.state.travellers} />}
+    {/* {this.state.selector === 'displayTravellers' && <Display travellers={this.state.travellers} />} */}
+    {this.state.selector === 'displayTravellers' && <Display travellers={this.state.travellers} deleteTraveller={this.deleteTraveller} />}
 		
     {/*Q4. Code to call the component that adds a traveller.*/}
     {this.state.selector === 'addTraveller' && <Add bookTraveller={this.bookTraveller} nextId={this.state.nextId} />}
+
 		{/*Q5. Code to call the component that deletes a traveller based on a given attribute.*/}
-    <Delete/>
+    {this.state.selector === 'deleteTraveller' && <Delete deleteTraveller={this.deleteTraveller}/>}
+    {/* <Delete deleteTraveller={this.deleteTraveller} /> */}
 	</div>
-      </div>
+</div>
     );
   }
 }
