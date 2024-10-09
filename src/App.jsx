@@ -51,7 +51,7 @@ function Display({ travellers }) {
       <tbody>
         {/*Q3. write code to call the JS variable defined at the top of this function to render table rows.*/}
         {travellers.map(traveller => (
-          <TravellerRow key={traveller.id} traveller={traveller} deleteTraveller={deleteTraveller}/>
+          <TravellerRow key={traveller.id} traveller={traveller}/>
         ))}
       </tbody>
     </table>
@@ -129,7 +129,7 @@ class Add extends React.Component {
 }
 
 
-class Delete extends React.Component {
+class Delete extends React.Component {  // travellers's name could be repeated, so use id to delete
   constructor() {
     super();
     this.state = { id: '' };
@@ -139,6 +139,10 @@ class Delete extends React.Component {
   handleSubmit(e) {
     e.preventDefault();
     /*Q5. Fetch the passenger details from the deletion form and call deleteTraveller()*/
+    // const form = document.forms.deleteTraveller;
+    // console.log(form.traverlername.value);
+    // code to delete the traveller
+    // deleteTraveller(form.travellername.value);
     this.props.deleteTraveller(parseInt(this.state.id));
     this.setState({ id: '' });
   }
@@ -205,6 +209,7 @@ class TicketToRide extends React.Component {
 
   deleteTraveller(id) {
 	  /*Q5. Write code to delete a passenger from the traveller state variable.*/
+    console.log('Deleting traveller with id:', id);
     this.setState(prevState => ({
       travellers: prevState.travellers.filter(traveller => traveller.id !== id)
     }));
@@ -234,7 +239,6 @@ class TicketToRide extends React.Component {
           )}
 
     {/*Q3. Code to call component that Displays Travellers.*/}
-    {/* {this.state.selector === 'displayTravellers' && <Display travellers={this.state.travellers} />} */}
     {this.state.selector === 'displayTravellers' && <Display travellers={this.state.travellers} deleteTraveller={this.deleteTraveller} />}
 		
     {/*Q4. Code to call the component that adds a traveller.*/}
